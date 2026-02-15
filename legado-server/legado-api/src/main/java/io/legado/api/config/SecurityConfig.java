@@ -29,6 +29,9 @@ public class SecurityConfig {
                 // 禁用CSRF（使用JWT不需要）
                 .csrf().disable()
                 
+                // 配置CORS
+                .cors().and()
+                
                 // 配置会话管理（无状态）
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

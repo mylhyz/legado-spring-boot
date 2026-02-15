@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -57,6 +58,20 @@ public class BookSourceController {
     public ApiResponse<Void> addSources(@RequestBody List<BookSource> sources) {
         bookSourceService.saveSources(sources);
         return ApiResponse.success(null);
+    }
+    
+    /**
+     * 从URL导入书源
+     */
+    @PostMapping("/import/url")
+    public ApiResponse<Integer> importFromUrl(@RequestParam String url) {
+        try {
+            int count = bookSourceService.importFromUrl(url);
+            return ApiResponse.success(count);
+        } catch (IOException e) {
+            log.error("从URL导入书源失败: {}", url, e);
+            return ApiResponse.error(400, "从URL导入书源失败: " + e.getMessage());
+        }
     }
     
     /**

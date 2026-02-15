@@ -21,12 +21,15 @@ import {
   Copy,
   Download,
   Upload,
+  LinkIcon,
 } from 'lucide-react';
 
 export default function SourcesPage() {
   const router = useRouter();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedGroup, setSelectedGroup] = useState<string>('all');
+  const [showImportUrlDialog, setShowImportUrlDialog] = useState(false);
+  const [importUrl, setImportUrl] = useState('');
 
   const { data, isLoading, refetch } = useQuery<ApiResponse<BookSource[]>>({
     queryKey: ['sources'],
@@ -74,7 +77,7 @@ export default function SourcesPage() {
       reader.onload = async (event) => {
         try {
           const content = event.target?.result as string;
-          await api.post('/api/v1/sources/import', JSON.parse(content));
+          await api.post('/api/v1/sources/batch', JSON.parse(content));
           alert('导入成功');
           refetch();
         } catch {
@@ -84,6 +87,26 @@ export default function SourcesPage() {
       reader.readAsText(file);
     };
     input.click();
+  };
+
+  const handleImportFromUrl = async () => {
+    if (!importUrl.trim()) {
+      alert('请输入URL');
+      return;
+    }
+    try {
+      const response = await api.post<ApiResponse<number>>(`/api/v1/sources/import/url?url=${encodeURIComponent(importUrl)}`);
+      if (response.data.code === 200) {
+        alert(`导入成功，共导入 ${response.data.data} 个书源`);
+        setShowImportUrlDialog(false);
+        setImportUrl('');
+        refetch();
+      } else {
+        alert(response.data.message || '导入失败');
+      }
+    } catch (error) {
+      alert('导入失败');
+    }
   };
 
   const handleExportSource = async (sourceId: number) => {
@@ -119,6 +142,10 @@ export default function SourcesPage() {
           <Button variant="outline" size="sm" onClick={handleImportSource}>
             <Download className="h-4 w-4 mr-2" />
             导入
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setShowImportUrlDialog(true)}>
+            <LinkIcon className="h-4 w-4 mr-2" />
+            URL导入
           </Button>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
             <RefreshCw className="h-4 w-4 mr-2" />
@@ -228,6 +255,26 @@ export default function SourcesPage() {
           ))
         )}
       </div>
+
+      {showImportUrlDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-background p-6 rounded-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">从URL导入书源</h2>
+            <Input
+              placeholder="请输入书源JSON的URL地址"
+              value={importUrl}
+              onChange={(e) => setImportUrl(e.target.value)}
+              className="mb-4"
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowImportUrlDialog(false)}>
+                取消
+              </Button>
+              <Button onClick={handleImportFromUrl}>导入</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

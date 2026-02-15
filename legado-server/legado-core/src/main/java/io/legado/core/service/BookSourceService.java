@@ -1,5 +1,7 @@
 package io.legado.core.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.legado.model.entity.BookSource;
 import io.legado.model.repository.BookSourceRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,6 +21,11 @@ public class BookSourceService {
     
     @Autowired
     private BookSourceRepository bookSourceRepository;
+    
+    @Autowired
+    private io.legado.core.utils.HttpClient httpClient;
+    
+    private final ObjectMapper objectMapper = new ObjectMapper();
     
     /**
      * 获取所有书源
@@ -86,6 +94,17 @@ public class BookSourceService {
         
         source.setEnabled(enabled);
         bookSourceRepository.save(source);
+    }
+    
+    /**
+     * 从URL导入书源
+     */
+    @Transactional
+    public int importFromUrl(String url) throws IOException {
+        String jsonContent = httpClient.get(url);
+        List<BookSource> sources = objectMapper.readValue(jsonContent, new TypeReference<List<BookSource>>() {});
+        bookSourceRepository.saveAll(sources);
+        return sources.size();
     }
     
 }
