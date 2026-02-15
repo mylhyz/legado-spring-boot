@@ -60,9 +60,9 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
-# JWT Configuration
+# JWT Configuration (密钥长度必须 >= 64字符/512位，用于HS512算法)
 jwt:
-  secret: legado-secret-key-change-in-production
+  secret: nXXC3uOCC38Bu9TX5LCBoo8cet5L8pBnkdnIfBU109ihe19rgs87TS5sJOnW80N
   expiration: 86400000
 
 # CORS Configuration

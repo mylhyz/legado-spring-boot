@@ -29,8 +29,14 @@ public class JwtTokenProvider {
     
     @PostConstruct
     public void init() {
-        // 使用HS512算法生成密钥
-        key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        // 使用HS512算法生成密钥，要求密钥长度 >= 512位(64字节)
+        byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
+        if (keyBytes.length < 64) {
+            log.warn("配置的JWT密钥长度不足64字节(512位)，使用自动生成的安全密钥");
+            key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        } else {
+            key = Keys.hmacShaKeyFor(keyBytes);
+        }
     }
     
     /**
