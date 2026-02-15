@@ -1,0 +1,73 @@
+# Legado Server Configuration
+
+# Application
+spring:
+  application:
+    name: legado-server
+  
+  # Database Configuration (SQLite)
+  datasource:
+    url: jdbc:sqlite:./data/legado.db?journal_mode=WAL&synchronous=NORMAL&cache_size=10000&temp_store=memory
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+        jdbc:
+          batch_size: 50
+          fetch_size: 100
+
+  # Cache Configuration (Caffeine)
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=10000,expireAfterWrite=1h
+
+  # File Upload
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  # Jackson
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8080
+
+# Logging
+logging:
+  level:
+    io.legado: INFO
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# JWT Configuration
+jwt:
+  secret: legado-secret-key-change-in-production
+  expiration: 86400000
+
+# CORS Configuration
+legado:
+  cors:
+    allowed-origins: http://localhost:3000,http://localhost:3001
+    allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+    allowed-headers: "*"
+    max-age: 3600
