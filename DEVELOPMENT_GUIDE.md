@@ -151,7 +151,7 @@ mvn clean install -DskipTests
 #### 方式一：使用 Maven 插件（推荐开发模式）
 
 ```bash
-cd legado-apiz
+cd legado-api
 mvn spring-boot:run
 ```
 

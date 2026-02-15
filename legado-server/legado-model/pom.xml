@@ -28,10 +28,10 @@
             <artifactId>sqlite-jdbc</artifactId>
         </dependency>
 
-        <!-- Hibernate SQLite Dialect -->
+        <!-- Hibernate SQLite Dialect - 使用与 Spring Boot 2.7 兼容的版本 -->
         <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-community-dialects</artifactId>
+            <groupId>com.github.gwenn</groupId>
+            <artifactId>sqlite-dialect</artifactId>
         </dependency>
 
         <!-- Internal -->

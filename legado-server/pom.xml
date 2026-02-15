@@ -76,11 +76,11 @@
                 <version>${sqlite-jdbc.version}</version>
             </dependency>
 
-            <!-- Hibernate SQLite Dialect -->
+            <!-- Hibernate SQLite Dialect - 使用与 Spring Boot 2.7 (Hibernate 5.6.x) 兼容的版本 -->
             <dependency>
-                <groupId>org.hibernate.orm</groupId>
-                <artifactId>hibernate-community-dialects</artifactId>
-                <version>${hibernate-community-dialects.version}</version>
+                <groupId>com.github.gwenn</groupId>
+                <artifactId>sqlite-dialect</artifactId>
+                <version>0.1.2</version>
             </dependency>
 
             <!-- GraalVM JavaScript -->

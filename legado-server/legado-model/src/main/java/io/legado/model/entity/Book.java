@@ -18,7 +18,7 @@ import java.util.List;
        indexes = {
            @Index(name = "idx_books_name_author", columnList = "name, author"),
            @Index(name = "idx_books_origin", columnList = "origin"),
-           @Index(name = "idx_books_group_id", columnList = "groupId")
+           @Index(name = "idx_books_group_id", columnList = "group_id")
        })
 public class Book {
     
