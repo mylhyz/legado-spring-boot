@@ -247,13 +247,13 @@ interface BookSource {
 
 ```bash
 cd legado-web
-npm install
+pnpm install
 ```
 
 ### 8.2 启动开发服务器
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 访问 http://localhost:3000
@@ -261,14 +261,14 @@ npm run dev
 ### 8.3 构建生产版本
 
 ```bash
-npm run build
-npm start
+pnpm build
+pnpm start
 ```
 
 ### 8.4 代码检查
 
 ```bash
-npm run lint
+pnpm lint
 ```
 
 ---
