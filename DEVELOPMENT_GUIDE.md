@@ -543,3 +543,10 @@ npm run dev
 - 前端：`http://localhost:3000`
 
 祝您调试顺利！如有问题请查看控制台日志或参考常见问题章节。
+
+
+## 调试进度
+
+1，书源管理页面 yuedu://rsssource/importonline?src=http://yuedu.miaogongzi.net/shuyuan/miaogongziDY.json
+2，书源管理首页 http://yuedu.miaogongzi.net/gx.html
+3，管理页面内导入书源 yuedu://booksource/importonline?src=https://shuyuan.nyasama.cc/cdn/5f626361539d546e6fa3a02b24598284.json

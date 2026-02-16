@@ -51,14 +51,18 @@ spring:
 server:
   port: 8080
 
-# Logging
+# Logging Configuration
 logging:
+  file:
+    name: ${user.home}/.legado/legado-server.log
+    max-size: 100MB
+    max-history: 30
   level:
     io.legado: INFO
     org.springframework.web: INFO
-    org.hibernate.SQL: DEBUG
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 
 # JWT Configuration (密钥长度必须 >= 64字符/512位，用于HS512算法)
 jwt:
