@@ -116,6 +116,18 @@ public class BookSource {
     private String exploreUrl;
     
     /**
+     * 发现筛选规则
+     */
+    @Column(name = "explore_screen", columnDefinition = "TEXT")
+    private String exploreScreen;
+    
+    /**
+     * 发现规则（JSON格式）
+     */
+    @Column(name = "rule_explore", columnDefinition = "TEXT")
+    private String ruleExplore;
+    
+    /**
      * 搜索规则（JSON格式）
      */
     @Column(name = "rule_search", columnDefinition = "TEXT")

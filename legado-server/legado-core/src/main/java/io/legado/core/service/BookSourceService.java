@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 书源服务
@@ -102,9 +103,53 @@ public class BookSourceService {
     @Transactional
     public int importFromUrl(String url) throws IOException {
         String jsonContent = httpClient.get(url);
-        List<BookSource> sources = objectMapper.readValue(jsonContent, new TypeReference<List<BookSource>>() {});
+        List<Map<String, Object>> rawSources = objectMapper.readValue(jsonContent, new TypeReference<List<Map<String, Object>>>() {});
+        
+        List<BookSource> sources = rawSources.stream().map(this::convertToBookSource).toList();
         bookSourceRepository.saveAll(sources);
         return sources.size();
+    }
+    
+    private BookSource convertToBookSource(Map<String, Object> raw) {
+        BookSource source = new BookSource();
+        
+        source.setSourceName((String) raw.getOrDefault("bookSourceName", ""));
+        source.setSourceUrl((String) raw.getOrDefault("bookSourceUrl", ""));
+        source.setSourceIcon((String) raw.get("bookSourceIcon"));
+        source.setSourceGroup((String) raw.get("bookSourceGroup"));
+        source.setEnabled(raw.get("enabled") != null ? (Boolean) raw.get("enabled") : true);
+        source.setEnabledExplore(raw.get("enabledExplore") != null ? (Boolean) raw.get("enabledExplore") : true);
+        source.setWeight(raw.get("weight") != null ? ((Number) raw.get("weight")).intValue() : 0);
+        source.setCustomOrder(raw.get("customOrder") != null ? ((Number) raw.get("customOrder")).intValue() : 0);
+        source.setLoginUrl((String) raw.get("loginUrl"));
+        source.setLoginUi((String) raw.get("loginUi"));
+        source.setLoginCheckJs((String) raw.get("loginCheckJs"));
+        source.setBookUrlPattern((String) raw.get("bookUrlPattern"));
+        source.setHeader((String) raw.get("header"));
+        source.setSearchUrl((String) raw.get("searchUrl"));
+        source.setExploreUrl((String) raw.get("exploreUrl"));
+        source.setLastUpdateTime(raw.get("lastUpdateTime") != null ? ((Number) raw.get("lastUpdateTime")).longValue() : null);
+        source.setRespondTime(raw.get("respondTime") != null ? ((Number) raw.get("respondTime")).longValue() : null);
+        
+        source.setRuleSearch(serializeField(raw.get("ruleSearch")));
+        source.setRuleBookInfo(serializeField(raw.get("ruleBookInfo")));
+        source.setRuleToc(serializeField(raw.get("ruleToc")));
+        source.setRuleContent(serializeField(raw.get("ruleContent")));
+        source.setRuleReview(serializeField(raw.get("ruleReview")));
+        source.setContentReplaceRule(serializeField(raw.get("contentReplaceRule")));
+        source.setRuleExplore(serializeField(raw.get("ruleExplore")));
+        
+        return source;
+    }
+    
+    private String serializeField(Object field) {
+        if (field == null) return null;
+        try {
+            return objectMapper.writeValueAsString(field);
+        } catch (IOException e) {
+            log.warn("序列化字段失败", e);
+            return null;
+        }
     }
     
 }
