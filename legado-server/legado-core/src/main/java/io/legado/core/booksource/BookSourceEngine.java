@@ -289,6 +289,11 @@ public class BookSourceEngine {
             return new Elements();
         }
         
+        // 处理CSS选择器前缀 @css:
+        if (rule.startsWith("@css:")) {
+            rule = rule.substring(5);
+        }
+        
         // 处理JSON路径
         if (rule.startsWith("$.")) {
             // TODO: 实现JSON路径解析
@@ -304,6 +309,11 @@ public class BookSourceEngine {
     private String parseText(Element element, String rule) {
         if (rule == null || rule.isEmpty()) {
             return "";
+        }
+        
+        // 处理CSS选择器前缀 @css:
+        if (rule.startsWith("@css:")) {
+            rule = rule.substring(5);
         }
         
         // 处理正则表达式
@@ -342,6 +352,11 @@ public class BookSourceEngine {
     private String parseAttr(Element element, String rule, String attr) {
         if (rule == null || rule.isEmpty()) {
             return "";
+        }
+        
+        // 处理CSS选择器前缀 @css:
+        if (rule.startsWith("@css:")) {
+            rule = rule.substring(5);
         }
         
         // 检查是否指定了属性

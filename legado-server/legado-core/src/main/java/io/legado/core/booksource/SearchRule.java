@@ -1,11 +1,13 @@
 package io.legado.core.booksource;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 /**
  * 书源搜索规则
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchRule {
     
     /**
